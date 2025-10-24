@@ -107,7 +107,7 @@ export const hospitals: Hospital[] = [
     county: "Nakuru",
     services: ["Emergency", "Surgery", "Maternity", "Outpatient"],
     rating: 4.0,
-    image: "https://images.unsplash.com/photo-1519494140681-03682c0e6676?auto=format&fit=crop&q=80&w=400",
+    image: "https://images.unsplash.com/photo-1624343285636-aba82fd5a124?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=871",
     contact: "+254 51 2210500"
   },
   {
@@ -117,17 +117,47 @@ export const hospitals: Hospital[] = [
     county: "Kiambu",
     services: ["Emergency", "Maternity", "Pediatrics", "Laboratory"],
     rating: 4.2,
-    image: "https://images.unsplash.com/photo-1516841273335-e39b37888115?auto=format&fit=crop&q=80&w=400",
+    image: "https://images.unsplash.com/photo-1579154204601-01588f351e67?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870",
     contact: "+254 67 21054"
   },
   {
-    id: "12",
-    name: "Machakos Level 5 Hospital",
-    location: "Machakos",
-    county: "Machakos",
+    id: "13",
+    name: "Baringo county referral hospital",
+    location: "E/Ravine",
+    county: "Baringo",
     services: ["General Medicine", "Surgery", "Maternity", "Radiology"],
-    rating: 4.1,
-    image: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&q=80&w=400",
+    rating: 4.4,
+    image: "https://plus.unsplash.com/premium_photo-1664303492452-76f0745336fd?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=745",
     contact: "+254 44 21344"
+  },
+    {
+    id: "14",
+    name: "medical center",
+    location: "Eldoret",
+    county: "Uasin Gishu",
+    services: ["General Medicine", "Surgery", "Maternity", "Radiology"],
+    rating: 4.5,
+    image: "https://images.unsplash.com/photo-1581982231900-6a1a46b744c9?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1074",
+    contact: "+254 63 55667"
+  },
+    {
+    id: "15",
+    name: "pwani county referral hospital",
+    location: "Mombasa",
+    county: "Mombasa",
+    services: ["General Medicine", "Surgery", "Maternity", "Radiology", "cardiology"],
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1710074213374-e68503a1b795?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=736",
+    contact: "+254 72 784521"
+  },
+    {
+    id: "16",
+    name: "Tenwek mission hospital",
+    location: "Bomet",
+    county: "Bomet",
+    services: ["General Medicine", "Surgery", "Maternity", "Radiology", "Dental care"],
+    rating: 4.1,
+    image: "https://plus.unsplash.com/premium_photo-1661895714925-2c7a6be6be32?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
+    contact: "+254 89674532"
   }
 ];

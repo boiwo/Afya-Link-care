@@ -3,13 +3,30 @@ import { hospitals } from "@/data/hospitals";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Star, ArrowLeft, Clock, Calendar } from "lucide-react";
+import { MapPin, Phone, Star, ArrowLeft, Clock, Calendar, CheckCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
 
 const HospitalDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const hospital = hospitals.find((h) => h.id === id);
+
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [phone, setPhone] = useState("");
+  const [isBooked, setIsBooked] = useState(false); // ✅ Track confirmation
 
   if (!hospital) {
     return (
@@ -27,6 +44,21 @@ const HospitalDetail = () => {
       </div>
     );
   }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log("Appointment Booked:", {
+      name,
+      date,
+      time,
+      phone,
+      hospital: hospital.name,
+    });
+
+    // ✅ Show confirmation message
+    setIsBooked(true);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -78,11 +110,96 @@ const HospitalDetail = () => {
                 </div>
               </div>
 
-              <Button className="w-full mb-4 bg-primary hover:bg-primary/90">
-                <Calendar className="w-4 h-4 mr-2" />
-                Book Appointment
-              </Button>
-              
+              {/* Booking Modal */}
+              <Dialog onOpenChange={(open) => { if (!open) setIsBooked(false); }}>
+                <DialogTrigger asChild>
+                  <Button className="w-full mb-4 bg-primary hover:bg-primary/90">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Book Appointment
+                  </Button>
+                </DialogTrigger>
+
+                <DialogContent>
+                  {!isBooked ? (
+                    <>
+                      <DialogHeader>
+                        <DialogTitle>
+                          Book Appointment at {hospital.name}
+                        </DialogTitle>
+                      </DialogHeader>
+
+                      <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="name">Full Name</Label>
+                          <Input
+                            id="name"
+                            placeholder="Enter your full name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                          />
+                        </div>
+
+                        <div className="grid gap-2">
+                          <Label htmlFor="date">Date</Label>
+                          <Input
+                            id="date"
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            required
+                          />
+                        </div>
+
+                        <div className="grid gap-2">
+                          <Label htmlFor="time">Time</Label>
+                          <Input
+                            id="time"
+                            type="time"
+                            value={time}
+                            onChange={(e) => setTime(e.target.value)}
+                            required
+                          />
+                        </div>
+
+                        <div className="grid gap-2">
+                          <Label htmlFor="phone">Phone Number</Label>
+                          <Input
+                            id="phone"
+                            placeholder="07xx xxx xxx"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            required
+                          />
+                        </div>
+
+                        <DialogFooter>
+                          <Button type="submit" className="w-full">
+                            Confirm Booking
+                          </Button>
+                        </DialogFooter>
+                      </form>
+                    </>
+                  ) : (
+                    // ✅ Confirmation message
+                    <div className="flex flex-col items-center justify-center text-center space-y-4 py-8">
+                      <CheckCircle className="w-16 h-16 text-green-500" />
+                      <h2 className="text-2xl font-semibold">
+                        Appointment Confirmed!
+                      </h2>
+                      <p className="text-muted-foreground">
+                        Thank you, <strong>{name}</strong> — your appointment at{" "}
+                        <strong>{hospital.name}</strong> has been booked for{" "}
+                        <strong>{date}</strong> at <strong>{time}</strong>.
+                      </p>
+                      <Button onClick={() => navigate("/")} className="mt-4">
+                        Back to Home
+                      </Button>
+                    </div>
+                  )}
+                </DialogContent>
+              </Dialog>
+
               <Button variant="outline" className="w-full">
                 <Phone className="w-4 h-4 mr-2" />
                 Call Hospital
@@ -132,3 +249,4 @@ const HospitalDetail = () => {
 };
 
 export default HospitalDetail;
+
