@@ -32,9 +32,11 @@ const Hero = () => {
                     className="pl-10 h-12 border-0 bg-background"
                   />
                 </div>
-                <Button className="h-12 px-6 bg-primary hover:bg-primary/90 text-primary-foreground">
-                  <Search className="w-4 h-4 mr-2" />
-                  Find Clinics
+                <Button className="h-12 px-6 bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
+                  <a href="/clinics">
+                    <Search className="w-4 h-4 mr-2" />
+                    Find Clinics
+                  </a>
                 </Button>
               </div>
             </div>

@@ -17,23 +17,23 @@ const Navbar = () => {
             <a href="/" className="text-foreground hover:text-primary transition-colors">
               Home
             </a>
-            <a href="#clinics" className="text-foreground hover:text-primary transition-colors">
+            <a href="/clinics" className="text-foreground hover:text-primary transition-colors">
               Find Clinics
             </a>
-            <a href="#articles" className="text-foreground hover:text-primary transition-colors">
+            <a href="/articles" className="text-foreground hover:text-primary transition-colors">
               Health Articles
             </a>
-            <a href="#about" className="text-foreground hover:text-primary transition-colors">
+            <a href="/about" className="text-foreground hover:text-primary transition-colors">
               About
             </a>
           </div>
 
           <div className="flex items-center gap-3">
-            <Button variant="ghost" className="text-foreground hover:text-primary">
-              Login
+            <Button variant="ghost" className="text-foreground hover:text-primary" asChild>
+              <a href="/auth">Login</a>
             </Button>
-            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-              Get Started
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
+              <a href="/clinics">Get Started</a>
             </Button>
           </div>
         </div>
