@@ -2,12 +2,15 @@ import { MapPin, Phone, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Hospital } from "@/data/hospitals";
+import { useNavigate } from "react-router-dom";
 
 interface HospitalCardProps {
   hospital: Hospital;
 }
 
 const HospitalCard = ({ hospital }: HospitalCardProps) => {
+  const navigate = useNavigate();
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div className="aspect-video overflow-hidden">
@@ -48,7 +51,10 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
           ))}
         </div>
 
-        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+        <Button 
+          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+          onClick={() => navigate(`/hospital/${hospital.id}`)}
+        >
           View Details
         </Button>
       </CardContent>
