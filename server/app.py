@@ -7,10 +7,13 @@ app = Flask(__name__)
 CORS(app)
 
 # ----------------------------------------------------
-# ✅ Configure Database
+# Configure Database
 # ----------------------------------------------------
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_PATH = os.path.join(BASE_DIR, "instance", "afyalink.db")
+INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
+DB_PATH = os.path.join(INSTANCE_DIR, "afyalink.db")
+
+os.makedirs(INSTANCE_DIR, exist_ok=True)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -19,14 +22,14 @@ db.init_app(app)
 print("📁 Using database:", app.config["SQLALCHEMY_DATABASE_URI"])
 
 # ----------------------------------------------------
-# ✅ Default Route
+# Default Route
 # ----------------------------------------------------
 @app.route("/")
 def home():
     return jsonify({"message": "Welcome to Afya Link Care API"}), 200
 
 # ----------------------------------------------------
-# ✅ Hospital CRUD Routes
+# Hospital CRUD
 # ----------------------------------------------------
 @app.route("/api/hospitals", methods=["GET"])
 def get_hospitals():
@@ -43,7 +46,6 @@ def create_hospital():
     data = request.get_json()
     required_fields = ["name", "location", "county"]
     missing = [f for f in required_fields if not data.get(f)]
-
     if missing:
         return jsonify({"error": f"Missing required fields: {', '.join(missing)}"}), 400
 
@@ -64,7 +66,6 @@ def create_hospital():
 def update_hospital(id):
     hospital = Hospital.query.get_or_404(id)
     data = request.get_json()
-
     hospital.name = data.get("name", hospital.name)
     hospital.location = data.get("location", hospital.location)
     hospital.county = data.get("county", hospital.county)
@@ -72,7 +73,6 @@ def update_hospital(id):
     hospital.image_url = data.get("image_url", hospital.image_url)
     hospital.phone = data.get("phone", hospital.phone)
     hospital.rating = data.get("rating", hospital.rating)
-
     db.session.commit()
     return jsonify(hospital.to_dict()), 200
 
@@ -83,10 +83,12 @@ def delete_hospital(id):
     db.session.commit()
     return jsonify({"message": "Hospital deleted successfully"}), 200
 
-
+# ----------------------------------------------------
+# Run Server
+# ----------------------------------------------------
 if __name__ == "__main__":
-    os.makedirs(os.path.join(BASE_DIR, "instance"), exist_ok=True)
     with app.app_context():
-        db.create_all()
+        db.create_all()  # Create tables if missing
 
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
