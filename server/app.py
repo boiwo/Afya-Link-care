@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, url_for
 from flask_cors import CORS
 from models import db, Hospital
 import os
@@ -12,7 +12,6 @@ CORS(app)
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 INSTANCE_DIR = os.path.join(BASE_DIR, "instance")
 DB_PATH = os.path.join(INSTANCE_DIR, "afyalink.db")
-
 os.makedirs(INSTANCE_DIR, exist_ok=True)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
@@ -31,15 +30,27 @@ def home():
 # ----------------------------------------------------
 # Hospital CRUD
 # ----------------------------------------------------
+def make_absolute_image_url(image_url: str):
+    if image_url:
+        return request.host_url.rstrip("/") + image_url
+    return ""
+
 @app.route("/api/hospitals", methods=["GET"])
 def get_hospitals():
     hospitals = Hospital.query.all()
-    return jsonify([h.to_dict() for h in hospitals]), 200
+    result = []
+    for h in hospitals:
+        hospital_dict = h.to_dict()
+        hospital_dict["image_url"] = make_absolute_image_url(hospital_dict.get("image_url"))
+        result.append(hospital_dict)
+    return jsonify(result), 200
 
 @app.route("/api/hospitals/<int:id>", methods=["GET"])
 def get_hospital(id):
     hospital = Hospital.query.get_or_404(id)
-    return jsonify(hospital.to_dict()), 200
+    hospital_dict = hospital.to_dict()
+    hospital_dict["image_url"] = make_absolute_image_url(hospital_dict.get("image_url"))
+    return jsonify(hospital_dict), 200
 
 @app.route("/api/hospitals", methods=["POST"])
 def create_hospital():
@@ -60,7 +71,9 @@ def create_hospital():
     )
     db.session.add(new_hospital)
     db.session.commit()
-    return jsonify(new_hospital.to_dict()), 201
+    hospital_dict = new_hospital.to_dict()
+    hospital_dict["image_url"] = make_absolute_image_url(hospital_dict.get("image_url"))
+    return jsonify(hospital_dict), 201
 
 @app.route("/api/hospitals/<int:id>", methods=["PUT"])
 def update_hospital(id):
@@ -74,7 +87,9 @@ def update_hospital(id):
     hospital.phone = data.get("phone", hospital.phone)
     hospital.rating = data.get("rating", hospital.rating)
     db.session.commit()
-    return jsonify(hospital.to_dict()), 200
+    hospital_dict = hospital.to_dict()
+    hospital_dict["image_url"] = make_absolute_image_url(hospital_dict.get("image_url"))
+    return jsonify(hospital_dict), 200
 
 @app.route("/api/hospitals/<int:id>", methods=["DELETE"])
 def delete_hospital(id):
@@ -82,6 +97,12 @@ def delete_hospital(id):
     db.session.delete(hospital)
     db.session.commit()
     return jsonify({"message": "Hospital deleted successfully"}), 200
+
+# ----------------------------------------------------
+# Serve Images from static folder
+# ----------------------------------------------------
+# Place images in server/static/images/
+# Example in seed.py: image_url="/static/images/st_mary.jpg"
 
 # ----------------------------------------------------
 # Run Server
