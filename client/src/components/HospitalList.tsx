@@ -1,4 +1,5 @@
 
+
 import { useEffect, useState } from "react";
 import HospitalCard from "./HospitalCard";
 
@@ -14,6 +15,7 @@ interface Hospital {
   services?: string[];
 }
 
+// 👇 Base URL for your hosted Flask API
 const API_BASE = "https://afya-link-care-2.onrender.com/api";
 
 const HospitalList = () => {
@@ -26,7 +28,7 @@ const HospitalList = () => {
     setError(null);
     try {
       const res = await fetch(`${API_BASE}/hospitals`, { signal });
-      if (!res.ok) throw new Error("Failed to fetch hospitals");
+      if (!res.ok) throw new Error(`Failed to fetch hospitals: ${res.status}`);
       const data = await res.json();
       setHospitals(data);
     } catch (err: any) {
@@ -83,4 +85,3 @@ const HospitalList = () => {
 };
 
 export default HospitalList;
-
