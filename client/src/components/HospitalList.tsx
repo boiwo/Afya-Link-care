@@ -1,5 +1,4 @@
 
-
 import { useEffect, useState } from "react";
 import HospitalCard from "./HospitalCard";
 
@@ -15,7 +14,7 @@ interface Hospital {
   services?: string[];
 }
 
-const API_BASE = "http://127.0.0.1:5000/api";
+const API_BASE = "https://afya-link-care-2.onrender.com/api";
 
 const HospitalList = () => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
@@ -43,7 +42,7 @@ const HospitalList = () => {
   useEffect(() => {
     const controller = new AbortController();
     fetchHospitals(controller.signal);
-    return () => controller.abort(); // Cleanup on unmount
+    return () => controller.abort();
   }, []);
 
   if (loading) return <p className="text-center py-20">Loading hospitals...</p>;
@@ -84,3 +83,4 @@ const HospitalList = () => {
 };
 
 export default HospitalList;
+

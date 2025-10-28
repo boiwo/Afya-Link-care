@@ -5,14 +5,14 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 interface Hospital {
-  id: number;
+  id: string;
   name: string;
   location: string;
   county: string;
-  phone: string;
-  image_url: string;
-  rating: number;
   services: string[];
+  rating: number;
+  image: string;
+  contact: string;
 }
 
 interface HospitalCardProps {
@@ -26,11 +26,16 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
       <div className="aspect-video overflow-hidden">
         <img
-          src={hospital.image_url} 
+          src={hospital.image}
           alt={hospital.name}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src =
+              "https://via.placeholder.com/400x300?text=No+Image";
+          }}
         />
       </div>
+
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-2">
           <h3 className="text-xl font-semibold text-foreground">{hospital.name}</h3>
@@ -39,20 +44,22 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
             <span className="text-sm font-medium">{hospital.rating}</span>
           </div>
         </div>
-        
+
         <div className="space-y-2 mb-4">
           <div className="flex items-center gap-2 text-muted-foreground">
             <MapPin className="w-4 h-4" />
-            <span className="text-sm">{hospital.location}, {hospital.county}</span>
+            <span className="text-sm">
+              {hospital.location}, {hospital.county}
+            </span>
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
             <Phone className="w-4 h-4" />
-            <span className="text-sm">{hospital.phone}</span>
+            <span className="text-sm">{hospital.contact}</span>
           </div>
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
-          {hospital.services?.slice(0, 3).map((service, index) => (
+          {hospital.services.slice(0, 3).map((service, index) => (
             <span
               key={index}
               className="px-3 py-1 bg-primary/10 text-primary text-xs rounded-full"
@@ -62,7 +69,7 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
           ))}
         </div>
 
-        <Button 
+        <Button
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
           onClick={() => navigate(`/hospital/${hospital.id}`)}
         >
@@ -74,3 +81,4 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
 };
 
 export default HospitalCard;
+
