@@ -3,7 +3,15 @@ import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Star, ArrowLeft, Clock, Calendar, CheckCircle } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Star,
+  ArrowLeft,
+  Clock,
+  Calendar,
+  CheckCircle,
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
@@ -28,92 +36,131 @@ interface Hospital {
   services?: string[];
 }
 
-const API_BASE = "https://afya-link-care-2.onrender.com/api";
-
+const API_BASE = "https://afya-link-care-2.onrender.com/api"; // ✅ Fixed API base path
 
 const HospitalDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const hospitalId = Number(id);
 
   const [hospital, setHospital] = useState<Hospital | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Booking state
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [phone, setPhone] = useState("");
   const [isBooked, setIsBooked] = useState(false);
 
-  // Fetch hospital details
+  // ✅ Fetch hospital details from backend
   useEffect(() => {
-    if (!id) return;
+    if (!hospitalId) return;
 
-    fetch(`${API_BASE}/hospitals/${id}`)
-      .then((res) => {
+    const fetchHospital = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/hospitals/${hospitalId}`);
         if (!res.ok) throw new Error("Hospital not found");
-        return res.json();
-      })
-      .then((data) => {
+        const data = await res.json();
         setHospital(data);
-        setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Error fetching hospital:", err);
         setError("Hospital not found.");
+      } finally {
         setLoading(false);
-      });
-  }, [id]);
+      }
+    };
 
+    fetchHospital();
+  }, [hospitalId]);
+
+  // ✅ Handle booking form submission
   const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Appointment booked:", { name, date, time, phone, hospital: hospital?.name });
+    console.log("Appointment booked:", {
+      name,
+      date,
+      time,
+      phone,
+      hospital: hospital?.name,
+    });
     setIsBooked(true);
+    setName("");
+    setDate("");
+    setTime("");
+    setPhone("");
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading hospital details...</div>;
-  if (error || !hospital) return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">{error || "Hospital Not Found"}</h1>
-          <Button onClick={() => navigate("/")}>Back to Hospitals</Button>
+  // ✅ Loading state
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-center">
+          <div className="h-6 w-6 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <p className="text-muted-foreground">Loading hospital details...</p>
         </div>
       </div>
-      <Footer />
-    </div>
-  );
+    );
 
+  // ✅ Error or missing hospital
+  if (error || !hospital)
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">
+              {error || "Hospital Not Found"}
+            </h1>
+            <Button onClick={() => navigate("/")}>Back to Hospitals</Button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+
+  // ✅ Main Hospital Details
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="max-w-6xl mx-auto">
-          <Button variant="ghost" onClick={() => navigate("/")} className="mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/")}
+            className="mb-6 flex items-center"
+          >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Hospitals
           </Button>
 
           <div className="grid lg:grid-cols-2 gap-8 mb-8">
             <div className="aspect-video overflow-hidden rounded-lg">
-              <img src={hospital.image_url} alt={hospital.name} className="w-full h-full object-cover" />
+              <img
+                src={hospital.image_url}
+                alt={hospital.name}
+                className="w-full h-full object-cover"
+              />
             </div>
 
             <div>
               <div className="flex items-start justify-between mb-4">
-                <h1 className="text-3xl font-bold text-foreground">{hospital.name}</h1>
+                <h1 className="text-3xl font-bold text-foreground">
+                  {hospital.name}
+                </h1>
                 {hospital.rating && (
                   <div className="flex items-center gap-1 text-yellow-500">
                     <Star className="w-5 h-5 fill-current" />
-                    <span className="text-lg font-medium">{hospital.rating}</span>
+                    <span className="text-lg font-medium">
+                      {hospital.rating}
+                    </span>
                   </div>
                 )}
               </div>
 
               <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-3 text-muted-foreground">
-                  <MapPin className="w-5 h-5" /> {hospital.location}, {hospital.county}
+                  <MapPin className="w-5 h-5" /> {hospital.location},{" "}
+                  {hospital.county}
                 </div>
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Phone className="w-5 h-5" /> {hospital.phone}
@@ -124,7 +171,11 @@ const HospitalDetail = () => {
               </div>
 
               {/* Booking Modal */}
-              <Dialog onOpenChange={(open) => { if (!open) setIsBooked(false); }}>
+              <Dialog
+                onOpenChange={(open) => {
+                  if (!open) setIsBooked(false);
+                }}
+              >
                 <DialogTrigger asChild>
                   <Button className="w-full mb-4 bg-primary hover:bg-primary/90">
                     <Calendar className="w-4 h-4 mr-2" /> Book Appointment
@@ -135,43 +186,82 @@ const HospitalDetail = () => {
                   {!isBooked ? (
                     <>
                       <DialogHeader>
-                        <DialogTitle>Book Appointment at {hospital.name}</DialogTitle>
+                        <DialogTitle>
+                          Book Appointment at {hospital.name}
+                        </DialogTitle>
                       </DialogHeader>
-                      <form onSubmit={handleBookingSubmit} className="space-y-4">
+                      <form
+                        onSubmit={handleBookingSubmit}
+                        className="space-y-4"
+                      >
                         <div className="grid gap-2">
                           <Label htmlFor="name">Full Name</Label>
-                          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+                          <Input
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                          />
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="date">Date</Label>
-                          <Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+                          <Input
+                            id="date"
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            required
+                          />
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="time">Time</Label>
-                          <Input id="time" type="time" value={time} onChange={(e) => setTime(e.target.value)} required />
+                          <Input
+                            id="time"
+                            type="time"
+                            value={time}
+                            onChange={(e) => setTime(e.target.value)}
+                            required
+                          />
                         </div>
                         <div className="grid gap-2">
                           <Label htmlFor="phone">Phone Number</Label>
-                          <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+                          <Input
+                            id="phone"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            required
+                          />
                         </div>
                         <DialogFooter>
-                          <Button type="submit" className="w-full">Confirm Booking</Button>
+                          <Button type="submit" className="w-full">
+                            Confirm Booking
+                          </Button>
                         </DialogFooter>
                       </form>
                     </>
                   ) : (
                     <div className="flex flex-col items-center text-center space-y-4 py-8">
                       <CheckCircle className="w-16 h-16 text-green-500" />
-                      <h2 className="text-2xl font-semibold">Appointment Confirmed!</h2>
-                      <p>Thank you, <strong>{name}</strong> — your appointment at <strong>{hospital.name}</strong> has been booked for <strong>{date}</strong> at <strong>{time}</strong>.</p>
-                      <Button onClick={() => navigate("/")} className="mt-4">Back to Home</Button>
+                      <h2 className="text-2xl font-semibold">
+                        Appointment Confirmed!
+                      </h2>
+                      <p>
+                        Thank you, <strong>{name}</strong> — your appointment at{" "}
+                        <strong>{hospital.name}</strong> has been booked for{" "}
+                        <strong>{date}</strong> at <strong>{time}</strong>.
+                      </p>
+                      <Button onClick={() => navigate("/")} className="mt-4">
+                        Back to Home
+                      </Button>
                     </div>
                   )}
                 </DialogContent>
               </Dialog>
 
-              <Button variant="outline" className="w-full">
-                <Phone className="w-4 h-4 mr-2" /> Call Hospital
+              <Button variant="outline" className="w-full" asChild>
+                <a href={`tel:${hospital.phone}`}>
+                  <Phone className="w-4 h-4 mr-2" /> Call Hospital
+                </a>
               </Button>
             </div>
           </div>
@@ -179,17 +269,22 @@ const HospitalDetail = () => {
           <Card className="mb-8">
             <CardContent className="p-6">
               <h2 className="text-2xl font-bold mb-4">About This Hospital</h2>
-              <p className="text-muted-foreground mb-4">{hospital.description}</p>
+              <p className="text-muted-foreground mb-4">
+                {hospital.description}
+              </p>
             </CardContent>
           </Card>
 
-          {hospital.services?.length && (
+          {hospital.services?.length ? (
             <Card>
               <CardContent className="p-6">
                 <h2 className="text-2xl font-bold mb-4">Our Services</h2>
                 <div className="grid md:grid-cols-2 gap-4">
                   {hospital.services.map((service, index) => (
-                    <div key={index} className="flex items-center gap-3 p-4 bg-primary/5 rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center gap-3 p-4 bg-primary/5 rounded-lg"
+                    >
                       <div className="w-2 h-2 rounded-full bg-primary"></div>
                       <span className="font-medium">{service}</span>
                     </div>
@@ -197,7 +292,7 @@ const HospitalDetail = () => {
                 </div>
               </CardContent>
             </Card>
-          )}
+          ) : null}
         </div>
       </main>
       <Footer />
@@ -206,7 +301,6 @@ const HospitalDetail = () => {
 };
 
 export default HospitalDetail;
-
 
 
 

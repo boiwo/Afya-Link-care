@@ -1,85 +1,68 @@
-
-
 import { useEffect, useState } from "react";
 import HospitalCard from "./HospitalCard";
 
 interface Hospital {
-  id: number;
+  id: string;
   name: string;
-  location: string;
-  county: string;
-  description: string;
-  image_url: string;
-  phone: string;
-  rating?: number;
+  location?: string;
+  county?: string;
   services?: string[];
+  rating?: number;
+  image_url?: string; // must match backend
+  contact?: string;
 }
 
-// 👇 Base URL for your hosted Flask API
-const API_BASE = "https://afya-link-care-2.onrender.com/api";
+const API_BASE = "https://afya-link-care-3.onrender.com"; // backend URL
 
 const HospitalList = () => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchHospitals = async (signal?: AbortSignal) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch(`${API_BASE}/hospitals`, { signal });
-      if (!res.ok) throw new Error(`Failed to fetch hospitals: ${res.status}`);
-      const data = await res.json();
-      setHospitals(data);
-    } catch (err: any) {
-      if (err.name !== "AbortError") {
-        console.error("Error fetching hospitals:", err);
-        setError("Could not load hospitals. Please try again.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    const controller = new AbortController();
-    fetchHospitals(controller.signal);
-    return () => controller.abort();
+    const fetchHospitals = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/api/hospitals`);
+        if (!response.ok) throw new Error("Failed to fetch hospitals");
+        const data = await response.json();
+
+        // 🧹 Clean malformed image URLs before rendering
+        const sanitized = data.map((h: Hospital) => {
+          let imageUrl = h.image_url || "";
+
+          // Fix missing colon in https
+          if (imageUrl.startsWith("https//"))
+            imageUrl = imageUrl.replace("https//", "https://");
+          if (imageUrl.startsWith("http//"))
+            imageUrl = imageUrl.replace("http//", "http://");
+
+          // Remove backend URL accidentally prepended
+          if (imageUrl.includes("onrender.comhttps")) {
+            imageUrl = imageUrl.replace(/https:\/\/[^/]+https/, "https:");
+          }
+
+          return { ...h, image_url: imageUrl };
+        });
+
+        setHospitals(sanitized);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHospitals();
   }, []);
 
-  if (loading) return <p className="text-center py-20">Loading hospitals...</p>;
-
-  if (error)
-    return (
-      <div className="text-center py-20 text-red-500">
-        <p>{error}</p>
-        <button
-          onClick={() => fetchHospitals()}
-          className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-        >
-          Retry
-        </button>
-      </div>
-    );
+  if (loading) return <p>Loading hospitals...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Trusted Healthcare Facilities
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Connect with verified hospitals and clinics across Kenya
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {hospitals.map((hospital) => (
-            <HospitalCard key={hospital.id} hospital={hospital} />
-          ))}
-        </div>
-      </div>
+    <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+      {hospitals.map((hospital) => (
+        <HospitalCard key={hospital.id} hospital={hospital} />
+      ))}
     </section>
   );
 };
