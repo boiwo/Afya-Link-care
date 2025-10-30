@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +11,7 @@ import About from "./pages/About";
 import Auth from "./pages/Auth";
 import HospitalDetail from "./pages/HospitalDetail";
 import NotFound from "./pages/NotFound";
+import Admin from "./pages/Admin"; // ✅ add this import
 
 const queryClient = new QueryClient();
 
@@ -26,7 +28,11 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/hospital/:id" element={<HospitalDetail />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+          {/* ✅ Add Admin Route */}
+          <Route path="/admin" element={<Admin />} />
+
+          {/* CATCH-ALL */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

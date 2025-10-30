@@ -1,8 +1,18 @@
 import { MapPin, Phone, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Hospital } from "@/data/hospitals";
 import { useNavigate } from "react-router-dom";
+
+export interface Hospital {
+  id: string;
+  name: string;
+  location?: string;
+  county?: string;
+  services?: string[];
+  rating?: number;
+  image_url?: string; // must match backend field
+  contact?: string;
+}
 
 interface HospitalCardProps {
   hospital: Hospital;
@@ -13,9 +23,10 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      {/* ✅ Hospital Image */}
       <div className="aspect-video overflow-hidden">
         <img
-          src={hospital.image || "/placeholder-hospital.jpg"}
+          src={hospital.image_url || "/placeholder-hospital.jpg"} // fixed field
           alt={hospital.name || "Hospital image"}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
         />
@@ -77,4 +88,7 @@ const HospitalCard = ({ hospital }: HospitalCardProps) => {
 };
 
 export default HospitalCard;
+
+
+
 
