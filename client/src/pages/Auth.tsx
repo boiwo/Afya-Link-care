@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,67 +8,44 @@ import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
+const API_BASE = "https://afya-link-care-5.onrender.com/api/auth";
+
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(""); // can be username
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        navigate("/");
-      }
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        navigate("/");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+      const endpoint = isLogin ? "login" : "signup";
+      const res = await fetch(`${API_BASE}/${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: email, password }),
+      });
 
-        if (error) throw error;
+      const data = await res.json();
 
-        toast({
-          title: "Success!",
-          description: "You have successfully logged in.",
-        });
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-          },
-        });
+      if (!res.ok) throw new Error(data.message || "Auth failed");
 
-        if (error) throw error;
+      localStorage.setItem("token", data.token);
 
-        toast({
-          title: "Success!",
-          description: "Account created successfully. Please check your email for verification.",
-        });
-      }
-    } catch (error) {
+      toast({
+        title: "Success",
+        description: isLogin ? "Logged in successfully" : "Account created successfully",
+      });
+
+      navigate("/");
+    } catch (err: any) {
       toast({
         title: "Error",
-        description: error.message,
+        description: err.message,
         variant: "destructive",
       });
     } finally {
@@ -80,31 +56,29 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-background">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>{isLogin ? "Login" : "Sign Up"}</CardTitle>
             <CardDescription>
-              {isLogin
-                ? "Welcome back to AfyaLink"
-                : "Create your AfyaLink account"}
+              {isLogin ? "Welcome back to AfyaLink" : "Create your AfyaLink account"}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Username</Label>
                 <Input
                   id="email"
-                  type="email"
-                  placeholder="your@email.com"
+                  type="text"
+                  placeholder="Your username"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <Input

@@ -2,49 +2,29 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 
 const Navbar = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { toast } = useToast();
 
-  // 🧠 Check auth state on load and on change
+  // Check "login" state from localStorage
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
-
-    return () => subscription.unsubscribe();
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(storedUser);
   }, []);
 
-  // 🚪 Handle logout
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out.",
-    });
-    navigate("/");
+  const handleLogout = () => {
+    localStorage.removeItem("user"); // remove login state
+    setUser(null);
+    navigate("/auth");
   };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-
           {/* Logo */}
-          <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => navigate("/")}
-          >
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
             <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
               <Heart className="w-5 h-5 text-primary-foreground" fill="currentColor" />
             </div>
@@ -53,32 +33,18 @@ const Navbar = () => {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center gap-8">
-            <a href="/" className="text-foreground hover:text-primary transition-colors">
-              Home
-            </a>
-            <a href="/admin" className="text-foreground hover:text-primary transition-colors">
-              Admin
-            </a>
-            <a href="/articles" className="text-foreground hover:text-primary transition-colors">
-              Health Articles
-            </a>
-            <a href="/about" className="text-foreground hover:text-primary transition-colors">
-              About
-            </a>
+            <a href="/" className="text-foreground hover:text-primary transition-colors">Home</a>
+            <a href="/admin" className="text-foreground hover:text-primary transition-colors">Admin</a>
+            <a href="/articles" className="text-foreground hover:text-primary transition-colors">Health Articles</a>
+            <a href="/about" className="text-foreground hover:text-primary transition-colors">About</a>
           </div>
 
           {/* Auth Buttons */}
           <div className="flex items-center gap-3">
             {user ? (
               <>
-                <span className="text-sm text-muted-foreground hidden md:block">
-                  {user.email}
-                </span>
-                <Button
-                  variant="ghost"
-                  onClick={handleLogout}
-                  className="text-foreground hover:text-primary"
-                >
+                <span className="text-sm text-muted-foreground hidden md:block">{user}</span>
+                <Button variant="ghost" onClick={handleLogout} className="text-foreground hover:text-primary">
                   Logout
                 </Button>
               </>

@@ -15,6 +15,7 @@ interface Hospital {
 
 const API_BASE = "https://afya-link-care-5.onrender.com";
 
+
 const HospitalList = () => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [loading, setLoading] = useState(true);
