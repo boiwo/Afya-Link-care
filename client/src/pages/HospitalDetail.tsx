@@ -36,7 +36,7 @@ interface Hospital {
   services?: string[];
 }
 
-const API_BASE = "https://afya-link-care-2.onrender.com/api"; // ✅ Fixed API base path
+const API_BASE = "https://afya-link-care-5.onrender.com/api"; // ✅ Fixed API base path
 
 const HospitalDetail = () => {
   const { id } = useParams();
