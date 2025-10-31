@@ -141,8 +141,8 @@ interface Hospital {
 
 // Use environment check for dev vs prod
 const API_BASE = import.meta.env.PROD
-  ? "https://afya-link-care-5.onrender.com" // Deployed backend
-  : "http://127.0.0.1:5000";                 // Local dev backend
+  "https://afya-link-care-5.onrender.com" // Deployed backend
+          
 
 const HospitalList = () => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
