@@ -1,65 +1,115 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
 
-  // Check "login" state from localStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(storedUser);
+    const checkUser = () => {
+      const currentUser = localStorage.getItem("currentUser");
+
+      if (currentUser) {
+        setUser(JSON.parse(currentUser));
+      } else {
+        setUser(null);
+      }
+    };
+
+    checkUser();
+
+    window.addEventListener("storage", checkUser);
+
+    return () => {
+      window.removeEventListener("storage", checkUser);
+    };
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // remove login state
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("token");
+
     setUser(null);
+
     navigate("/auth");
   };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
+
+          <Link
+            to="/"
+            className="flex items-center gap-2"
+          >
             <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-              <Heart className="w-5 h-5 text-primary-foreground" fill="currentColor" />
+              <Heart
+                className="w-5 h-5 text-primary-foreground"
+                fill="currentColor"
+              />
             </div>
-            <span className="text-xl font-bold text-foreground">AfyaLink</span>
-          </div>
 
-          {/* Navigation Links */}
+            <span className="text-xl font-bold">
+              AfyaLink
+            </span>
+          </Link>
+
           <div className="hidden md:flex items-center gap-8">
-            <a href="/" className="text-foreground hover:text-primary transition-colors">Home</a>
-            <a href="/admin" className="text-foreground hover:text-primary transition-colors">Admin</a>
-            <a href="/articles" className="text-foreground hover:text-primary transition-colors">Health Articles</a>
-            <a href="/about" className="text-foreground hover:text-primary transition-colors">About</a>
+
+            <Link to="/">Home</Link>
+
+            <Link to="/admin">Admin</Link>
+
+            <Link to="/articles">Health Articles</Link>
+
+            <Link to="/about">About</Link>
+
           </div>
 
-          {/* Auth Buttons */}
           <div className="flex items-center gap-3">
+
             {user ? (
               <>
-                <span className="text-sm text-muted-foreground hidden md:block">{user}</span>
-                <Button variant="ghost" onClick={handleLogout} className="text-foreground hover:text-primary">
+                <span className="hidden md:block text-sm">
+                  {user.email}
+                </span>
+
+                <Button
+                  variant="ghost"
+                  onClick={handleLogout}
+                >
                   Logout
                 </Button>
               </>
             ) : (
               <>
-                <Button variant="ghost" className="text-foreground hover:text-primary" asChild>
-                  <a href="/auth">Login</a>
+                <Button
+                  variant="ghost"
+                  asChild
+                >
+                  <Link to="/auth">
+                    Login
+                  </Link>
                 </Button>
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
-                  <a href="/auth">Sign Up</a>
+
+                <Button
+                  asChild
+                >
+                  <Link to="/auth">
+                    Sign Up
+                  </Link>
                 </Button>
               </>
             )}
+
           </div>
+
         </div>
+
       </div>
     </nav>
   );

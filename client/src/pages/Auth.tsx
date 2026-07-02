@@ -1,116 +1,154 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const API_BASE = "https://afya-link-care-5.onrender.com/api/auth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import { useToast } from "@/hooks/use-toast";
+
+interface StoredUser {
+  id: number;
+  email: string;
+  password: string;
+}
+
+const USERS_KEY = "users";
+const CURRENT_USER_KEY = "currentUser";
+const TOKEN_KEY = "token";
+
+const normalizeEmail = (email: string) => email.trim().toLowerCase();
+const normalizePassword = (password: string) => password.trim();
+
+const getStoredUsers = (): StoredUser[] => {
+  try {
+    const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+    return Array.isArray(users) ? users : [];
+  } catch {
+    return [];
+  }
+};
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState(""); // can be username
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem(TOKEN_KEY);
+
+    if (token) {
+      navigate("/", { replace: true });
+    }
+  }, [navigate]);
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     setLoading(true);
 
-    try {
-      const endpoint = isLogin ? "login" : "signup";
-      const res = await fetch(`${API_BASE}/${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: email, password }),
-      });
+    const cleanEmail = normalizeEmail(email);
+    const cleanPassword = normalizePassword(password);
 
-      const data = await res.json();
+    const users = getStoredUsers();
 
-      if (!res.ok) throw new Error(data.message || "Auth failed");
+    let user = users.find(
+      (u) => normalizeEmail(u.email) === cleanEmail
+    );
 
-      localStorage.setItem("token", data.token);
+    // Automatically create account if it doesn't exist
+    if (!user) {
+      user = {
+        id: Date.now(),
+        email: cleanEmail,
+        password: cleanPassword,
+      };
 
-      toast({
-        title: "Success",
-        description: isLogin ? "Logged in successfully" : "Account created successfully",
-      });
+      users.push(user);
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    } else {
+      // Update password to whatever the user entered
+      user.password = cleanPassword;
 
-      navigate("/");
-    } catch (err: any) {
-      toast({
-        title: "Error",
-        description: err.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
     }
+
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+    localStorage.setItem(TOKEN_KEY, "logged-in");
+
+    window.dispatchEvent(new Event("storage"));
+
+    toast({
+      title: "Success",
+      description: "Logged in successfully!",
+    });
+
+    setLoading(false);
+
+    navigate("/", { replace: true });
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      <main className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-background">
+      <main className="flex-1 flex items-center justify-center py-12 px-4">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>{isLogin ? "Login" : "Sign Up"}</CardTitle>
+            <CardTitle>Login</CardTitle>
+
             <CardDescription>
-              {isLogin ? "Welcome back to AfyaLink" : "Create your AfyaLink account"}
+              Enter any email and password to continue.
             </CardDescription>
           </CardHeader>
+
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Username</Label>
+              <div>
+                <Label>Email</Label>
+
                 <Input
-                  id="email"
-                  type="text"
-                  placeholder="Your username"
+                  type="email"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+              <div>
+                <Label>Password</Label>
+
                 <Input
-                  id="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={6}
                 />
               </div>
 
               <Button
                 type="submit"
-                className="w-full bg-primary hover:bg-primary/90"
+                className="w-full"
                 disabled={loading}
               >
-                {loading ? "Loading..." : isLogin ? "Login" : "Sign Up"}
+                {loading ? "Please wait..." : "Login"}
               </Button>
-
-              <div className="text-center text-sm">
-                <button
-                  type="button"
-                  onClick={() => setIsLogin(!isLogin)}
-                  className="text-primary hover:underline"
-                >
-                  {isLogin
-                    ? "Don't have an account? Sign up"
-                    : "Already have an account? Login"}
-                </button>
-              </div>
             </form>
           </CardContent>
         </Card>
