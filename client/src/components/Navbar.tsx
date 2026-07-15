@@ -58,15 +58,23 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium">
 
-            <Link to="/">Home</Link>
+            <Link to="/" className="hover:text-primary transition-colors">Home</Link>
 
-            <Link to="/admin">Admin</Link>
+            <Link to="/admin" className="hover:text-primary transition-colors">Admin</Link>
 
-            <Link to="/articles">Health Articles</Link>
+            {/* ✅ Updated to route directly to the SHA Registration Form */}
+            <Link 
+              to="/sha/register" 
+              className="text-primary font-semibold bg-primary/10 hover:bg-primary/20 px-3 py-1.5 rounded-lg transition-colors"
+            >
+              SHA Register
+            </Link>
 
-            <Link to="/about">About</Link>
+            <Link to="/articles" className="hover:text-primary transition-colors">Health Articles</Link>
+
+            <Link to="/about" className="hover:text-primary transition-colors">About</Link>
 
           </div>
 
