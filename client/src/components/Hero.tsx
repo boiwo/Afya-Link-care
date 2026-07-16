@@ -66,13 +66,13 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* RIGHT SIDE IMAGE */}
-          <div className="relative hidden lg:block">
-            <div className="aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5">
+          {/* RIGHT SIDE IMAGE - Scaled up to fill maximum space naturally */}
+          <div className="relative hidden lg:block w-full h-full min-h-[500px]">
+            <div className="absolute inset-0 rounded-2xl overflow-hidden bg-transparent">
               <img
                 src="https://images.unsplash.com/photo-1736289162890-78f1ff4f8bd3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=746"
-                alt="Doctor using laptop"
-                className="w-full h-full object-cover"
+                alt="Healthcare professionals"
+                className="w-full h-full object-cover object-center"
               />
             </div>
           </div>
