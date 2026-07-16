@@ -32,7 +32,8 @@ const About = () => {
       <Navbar />
       
       <main className="flex-1">
-        <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-background to-secondary/20">
+        {/* Header Hero Section */}
+        <section className="pt-28 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-background to-secondary/20">
           <div className="max-w-7xl mx-auto text-center">
             <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
               About AfyaLink
@@ -43,30 +44,62 @@ const About = () => {
           </div>
         </section>
 
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="prose prose-lg max-w-none">
-              <p className="text-lg text-muted-foreground mb-6">
-                AfyaLink is Kenya's trusted healthcare platform, dedicated to bridging the gap between 
-                patients and quality healthcare providers. We understand that access to reliable healthcare 
-                information and services is crucial for every community.
-              </p>
-              
-              <p className="text-lg text-muted-foreground mb-6">
-                Our platform provides a comprehensive directory of verified clinics and hospitals across 
-                all 47 counties in Kenya. Whether you're looking for a nearby clinic, specialty care, or 
-                emergency services, AfyaLink makes it easy to find and connect with trusted healthcare providers.
-              </p>
-
-              <p className="text-lg text-muted-foreground">
-                We believe that everyone deserves access to quality healthcare. Through technology and 
-                community partnerships, we're making healthcare more accessible, transparent, and 
-                community-driven for all Kenyans.
-              </p>
+        {/* Split Image & Content Section */}
+        <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            {/* Left Column: Interactive/Team Image */}
+            <div className="w-full">
+              <img 
+                src="https://www.afyalink.co.ke/assets/img/about.png" // Place your dashboard/team image in your public/images folder
+                alt="AfyaLink Dashboard Team" 
+                className="w-full h-auto object-cover rounded-xl shadow-lg border border-border"
+              />
             </div>
+
+            {/* Right Column: About details, Vision, and Mission */}
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-3xl font-bold text-foreground mb-4">About Us</h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  AfyaLink is Kenya's trusted healthcare platform, dedicated to bridging the gap between 
+                  patients and quality healthcare providers. We understand that access to reliable healthcare 
+                  information and services is crucial for every community. Our platform provides a comprehensive 
+                  directory of verified clinics and hospitals across all 47 counties in Kenya.
+                </p>
+              </div>
+
+              {/* Our Vision Block */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <Heart className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-foreground">Our Vision</h3>
+                  <p className="text-muted-foreground text-sm mt-1 leading-relaxed">
+                    To revolutionize healthcare management in Kenya through innovative, reliable, and user-friendly technology.
+                  </p>
+                </div>
+              </div>
+
+              {/* Our Mission Block */}
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <Target className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-foreground">Our Mission</h3>
+                  <p className="text-muted-foreground text-sm mt-1 leading-relaxed">
+                    To provide hospitals and clinics with an integrated system that improves efficiency, accuracy, and patient experience.
+                  </p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </section>
 
+        {/* Values Section */}
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary/20">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold text-foreground text-center mb-12">
