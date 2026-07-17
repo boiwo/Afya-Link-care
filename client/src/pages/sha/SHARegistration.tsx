@@ -37,8 +37,6 @@ export default function SHARegistration() {
   const handlePrev = () => setStep(step - 1);
 
   const handleDashboardRedirect = () => {
-    // Pass the complete user details to the dashboard via React Router state
-    // UPDATED: Navigates to /sha/dashboard to align with your routing setup
     navigate('/sha/dashboard', { 
       state: { 
         userDetails: {
@@ -52,7 +50,8 @@ export default function SHARegistration() {
   };
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen py-12 lg:py-20 px-4 md:px-8 flex items-center justify-center">
+    /* ✅ Changed py-12 to pt-24 pb-12 so the form layout clears the fixed top navbar perfectly */
+    <div className="bg-[#FAF9F6] min-h-screen pt-24 pb-12 lg:pt-32 lg:pb-20 px-4 md:px-8 flex items-center justify-center">
       <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         
         {/* LEFT COLUMN: SHA Registration Form */}
