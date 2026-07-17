@@ -26,7 +26,7 @@ export default function SHARegistration() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    firstName: 'john doe', // Default name to display on the dashboard
+    firstName: '', // Default name to display on the dashboard
     idNo: '',
     phone: '',
     county: '',
