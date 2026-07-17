@@ -64,7 +64,7 @@ export default function SHADashboard() {
     chronicConditions: 'None',
     height: '175 cm',
     weight: '72 kg',
-    emergencyContact: ''
+    emergencyContact: 'Mary Doe (0722000111)'
   });
 
   // 3. Appointments State
