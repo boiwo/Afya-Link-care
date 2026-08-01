@@ -21,7 +21,7 @@ export default function SHADashboard() {
     email: 'johndoe@example.com'
   };
 
-  // --- STATE MANAGEMENT ---
+  //  STATE MANAGEMENT 
   const [activeTab, setActiveTab] = useState('Home');
   const [isCovered, setIsCovered] = useState(false);
   const [monthlyRate, setMonthlyRate] = useState(550);

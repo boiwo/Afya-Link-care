@@ -1,74 +1,61 @@
 # Afya-Link-Care
 
-Afya-Link-Care is a full-stack healthcare platform connecting users with trusted hospitals and clinics across Kenya. Users can browse hospitals, view services, and contact facilities directly.
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![Platform](https://img.shields.io/badge/Platform-Web-blue.svg)]()
+
+Afya-Link-Care is a full-stack healthcare platform connecting users with trusted hospitals and clinics across Kenya. Users can browse facilities, view offered services, read reviews, and find contact details seamlessly.
 
 ---
 
-## Features
+## 🚀 Features
 
-- Browse hospitals and clinics with detailed information
-- Hospital ratings and services overview
-- Responsive design for mobile and desktop
-- Error handling and loading states
-- Full-stack implementation with React (frontend) and Flask (backend)
+- 🏥 **Hospital Directory:** Browse registered hospitals and clinics with detailed profiles.
+- 🩺 **Services Overview:** View specialized services (e.g., Maternity, Dental, Emergency) and estimated costs.
+- ⭐ **Ratings & Reviews:** Check overall hospital ratings and read community feedback.
+- 📱 **Responsive Design:** Optimized experience for mobile, tablet, and desktop viewports.
+- 🛡️ **Robust API:** Powered by a lightweight Flask RESTful backend with proper error handling.
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- **Frontend:** React, TypeScript, Tailwind CSS
+- **Frontend:** React, TypeScript, Tailwind CSS, Vite
 - **Backend:** Python, Flask, Flask-RESTful
-- **Database:** SQLite / PostgreSQL (depending on setup)
-- **API:** RESTful endpoints
+- **Database:** SQLite (Development) / PostgreSQL (Production)
+- **API Styling:** RESTful APIs
 
 ---
 
-## Installation
+## 📊 Database Schema
 
-1. **Clone the repository**
+Below is the entity-relationship diagram representing the relational database design for Afya-Link-Care:
 
-```bash
-git clone git@github.com:boiwo/Afya-Link-care.git
-cd Afya-Link-care
+![Afya-Link-Care Database Schema](./assets/database-schema.png)
 
-Backend setup
+> 💡 **About the Schema:** This structure implements a clean many-to-many relationship between `hospitals` and `services` using the `hospital_services` join table, and links user `reviews` directly to each hospital.
 
-cd server
-python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-flask run
+---
 
-Frontend setup
+## 📁 Folder Structure
 
-cd ../client
-npm install
-npm run dev
-
-Open the frontend app in your browser (usually at http://localhost:5173)
-
-Browse hospitals, view details, and explore services
-
-The frontend fetches data from the backend API (http://127.0.0.1:5000/api/hospitals)
-
-
-Folder Structure
-
+```text
 Afya-Link-Care/
-├─ client/        # React frontend
-├─ server/        # Flask backend
-├─ README.md
-├─ .gitignore
-
-License
-
-This project is licensed under the MIT License.
-
-
-✅ This `README.md` covers **project overview, features, tech stack, setup, usage, structure, and contributing instructions**.  
-
----
-
-If you want, I can also **add badges for GitHub stars, issues, and npm version** to make it look more professional.  
-
-Do you want me to do that?
+├── assets/                 # Project assets (diagrams, images)
+│   └── database-schema.png
+├── client/                 # React Frontend
+│   ├── public/
+│   ├── src/
+│   │   ├── components/     # Reusable UI Components
+│   │   ├── pages/          # Page Views (Home, HospitalDetails)
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── package.json
+│   └── vite.config.ts
+├── server/                 # Flask Backend
+│   ├── app.py              # Application Entry Point
+│   ├── models.py           # Database Models (SQLAlchemy)
+│   ├── requirements.txt    # Python Dependencies
+│   └── instance/           # Local SQLite Database
+├── README.md
+└── .gitignore
