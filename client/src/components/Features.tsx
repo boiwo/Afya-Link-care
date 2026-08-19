@@ -65,7 +65,7 @@ const Features = () => {
               className="w-full h-full object-cover object-center"
               onError={(e) => {
                 e.currentTarget.src =
-                  "https://media.istockphoto.com/id/2217109321/photo/doctors-performing-surgery-in-operating-room.jpg?s=612x612&w=0&k=20&c=11gg15f6h2COVvTJ7uSU_RIeRlB_c5-4JRkSsJkPEiI=";
+                  "https://www.health.go.ke/sites/default/files/gallery-article/5014e5f9-26bc-46c4-8249-47dd200596ae.jpeg";
               }}
             />
 
