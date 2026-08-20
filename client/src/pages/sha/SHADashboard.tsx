@@ -57,7 +57,7 @@ export default function SHADashboard() {
   const [newDepRelation, setNewDepRelation] = useState('Spouse');
   const [newDepId, setNewDepId] = useState('');
 
-  // 2. Personal Health State
+  
   const [healthMetrics, setHealthMetrics] = useState({
     bloodType: 'O+',
     allergies: 'Penicillin, Peanuts',
@@ -67,7 +67,6 @@ export default function SHADashboard() {
     emergencyContact: 'Mary Doe (0722000111)'
   });
 
-  // 3. Appointments State
   const [appointments, setAppointments] = useState([
     { id: 'APT-102', hospital: 'Wajir County Referral Hospital', department: 'General Consultation', date: '2026-07-20', time: '10:00 AM', status: 'Confirmed' }
   ]);
@@ -76,30 +75,28 @@ export default function SHADashboard() {
   const [bookDate, setBookDate] = useState('');
   const [bookTime, setBookTime] = useState('09:00 AM');
 
-  // 4. Health Records
+
   const [healthRecords, setHealthRecords] = useState([
     { id: 'REC-901', date: '2026-05-12', facility: 'Wajir County Referral Hospital', diagnosis: 'Acute Tonsillitis', doctor: 'Dr. Kiprop', status: 'Archived' },
     { id: 'REC-704', date: '2026-02-28', facility: 'Afya Link Clinic', diagnosis: 'Mild Food Poisoning', doctor: 'Dr. Amina', status: 'Archived' }
   ]);
 
-  // 5. Prescriptions
+
   const [prescriptions, setPrescriptions] = useState([
     { id: 'RX-441', date: '2026-05-12', medication: 'Amoxicillin 500mg', instructions: '1 tablet 3 times a day for 7 days', status: 'Dispensed' },
     { id: 'RX-102', date: '2026-02-28', medication: 'ORS & Zinc Sulphate', instructions: 'Dissolve 1 sachet in 1L water', status: 'Completed' }
   ]);
 
-  // 6. Claims State
+  
   const [claims, setClaims] = useState([
     { id: 'CLM-9081', facility: 'Wajir County Referral Hospital', service: 'Outpatient Treatment', amount: 1500, status: 'Approved', date: '2026-05-12' },
     { id: 'CLM-3302', facility: 'Afya Link Clinic', service: 'Laboratory Tests', amount: 850, status: 'Pending Approval', date: '2026-06-01' }
   ]);
 
-  // 7. Payment History
+  
   const [paymentHistory, setPaymentHistory] = useState<any[]>([]);
 
-  // --- ACTIONS & FUNCTIONALITIES ---
-
-  // Handle M-Pesa STK Push
+  
   const handleMpesaSTKPush = (amount: number) => {
     if (!mpesaPhone.match(/^(?:254|\+254|0)?(7|1)\d{8}$/)) {
       toast.error("Please enter a valid Kenyan Safaricom phone number.");
@@ -138,7 +135,7 @@ export default function SHADashboard() {
     }, 2000);
   };
 
-  // Add Dependent
+  
   const handleAddDependent = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newDepName || !newDepId) {
@@ -151,7 +148,7 @@ export default function SHADashboard() {
     toast.success("Dependent added successfully.");
   };
 
-  // Book Appointment
+ 
   const handleBookAppointment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!bookDate) {
@@ -174,14 +171,14 @@ export default function SHADashboard() {
   return (
     <div className="bg-[#FAF9F6] min-h-screen flex text-slate-800 font-sans">
       
-      {/* SIDEBAR NAVIGATION */}
+      
       <aside className="w-64 bg-white border-r border-slate-100 flex flex-col justify-between p-6 fixed h-full z-20">
         <div className="space-y-8">
           <div className="flex items-center gap-2">
             <span className="font-black text-xl text-[#0066cc] tracking-tight">DHA Afyangu</span>
           </div>
 
-          {/* Sidebar Profile Summary */}
+          
           <div className="bg-slate-50/80 rounded-2xl p-4 border border-slate-100/50">
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Account Owner</p>
             <h4 className="font-bold text-slate-800 text-sm truncate mt-1 capitalize">{profileData.firstName}</h4>
@@ -232,7 +229,7 @@ export default function SHADashboard() {
       <main className="flex-1 ml-64 p-8 lg:p-12">
         <div className="max-w-5xl mx-auto space-y-8">
           
-          {/* TAB 1: HOME DASHBOARD */}
+        
           {activeTab === 'Home' && (
             <div className="space-y-8 animate-in fade-in duration-200">
               <div>
@@ -245,7 +242,7 @@ export default function SHADashboard() {
                 <p className="text-sm text-slate-500 mt-1">This is a history detailing your hospital visits and medical history.</p>
               </div>
 
-              {/* SHA PREMIUM CONTRIBUTION PANEL */}
+              
               <section className="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm relative overflow-hidden">
                 <div className="max-w-2xl space-y-6">
                   <div>
@@ -307,10 +304,10 @@ export default function SHADashboard() {
                 </div>
               </section>
 
-              {/* LOWER OVERVIEW DASHBOARD CARDS */}
+            
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                {/* 1. Insurance Covers Card */}
+                
                 <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm flex flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between mb-6">

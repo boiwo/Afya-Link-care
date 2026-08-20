@@ -210,7 +210,7 @@ const AdminDashboard = () => {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
 
-      {/* Add/Edit Hospital Form */}
+      
       <div className="mb-6 p-4 border rounded-lg">
         <h2 className="font-semibold mb-2">{editingId ? "Edit Hospital" : "Add New Hospital"}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -225,7 +225,7 @@ const AdminDashboard = () => {
         </Button>
       </div>
 
-      {/* Existing Hospitals */}
+      
       <h2 className="text-xl font-semibold mb-2">Existing Hospitals</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {hospitals.map((hospital) => (
