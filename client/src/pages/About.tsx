@@ -125,7 +125,7 @@ const About = () => {
             {/* Nurses Specialist Image */}
             <div className="w-full">
               <img
-                src="https://media.licdn.com/dms/image/v2/D4D03AQGmsZWfVENr2A/profile-displayphoto-scale_400_400/B4DaAbEPUoJ0Ag-/0/1787160492274?e=1788998400&v=beta&t=5I2_CoXL0jTazIJXRiDt1N_reLTxIxXiQkxbdRvV-vg"
+                src="https://media.licdn.com/dms/image/v2/D4D03AQHr5WpLdox42g/profile-displayphoto-scale_400_400/B4DaAe9ZMRGkAk-/0/1787225810302?e=1788998400&v=beta&t=eHxXasWZ8tuXnQbd42ucKmF4FNB2IJmGVOT1_PjjWGA"
                 alt="Nurses Specialist"
                 className="w-full h-auto object-cover rounded-xl shadow-lg border border-border"
               />
@@ -134,7 +134,7 @@ const About = () => {
             {/* Nurses Specialist Content */}
             <div>
               <h2 className="text-3xl font-bold text-foreground mb-4">
-                specialist Nurses
+                Specialist Nurses
               </h2>
 
               <p className="text-muted-foreground leading-relaxed">
