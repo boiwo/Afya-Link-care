@@ -123,5 +123,3 @@ const HospitalList = () => {
 };
 
 export default HospitalList;
-
-

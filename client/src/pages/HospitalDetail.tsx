@@ -36,7 +36,7 @@ interface Hospital {
   services?: string[];
 }
 
-const API_BASE = "https://afya-link-care-5.onrender.com/api/"; // ✅ Fixed API base path
+const API_BASE = "https://afya-link-care-5.onrender.com/api";
 
 const HospitalDetail = () => {
   const { id } = useParams();
@@ -53,19 +53,31 @@ const HospitalDetail = () => {
   const [phone, setPhone] = useState("");
   const [isBooked, setIsBooked] = useState(false);
 
-  // ✅ Fetch hospital details from backend
   useEffect(() => {
-    if (!hospitalId) return;
+    if (!hospitalId) {
+      setError("Invalid hospital ID");
+      setLoading(false);
+      return;
+    }
 
     const fetchHospital = async () => {
       try {
-        const res = await fetch(`${API_BASE}/hospitals/${hospitalId}`);
-        if (!res.ok) throw new Error("Hospital not found");
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch(
+          `${API_BASE}/hospitals/${hospitalId}`
+        );
+
+        if (!res.ok) {
+          throw new Error(`Failed with status ${res.status}`);
+        }
+
         const data = await res.json();
         setHospital(data);
       } catch (err) {
-        console.error("Error fetching hospital:", err);
-        setError("Hospital not found.");
+        console.error(err);
+        setError("Unable to load hospital details.");
       } finally {
         setLoading(false);
       }
@@ -74,233 +86,229 @@ const HospitalDetail = () => {
     fetchHospital();
   }, [hospitalId]);
 
-  // ✅ Handle booking form submission
-  const handleBookingSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Appointment booked:", {
-      name,
-      date,
-      time,
-      phone,
-      hospital: hospital?.name,
-    });
+  const handleBooking = () => {
+    if (!name || !date || !time || !phone) {
+      alert("Please fill all fields");
+      return;
+    }
+
     setIsBooked(true);
-    setName("");
-    setDate("");
-    setTime("");
-    setPhone("");
+
+    setTimeout(() => {
+      setName("");
+      setDate("");
+      setTime("");
+      setPhone("");
+    }, 1000);
   };
 
-  // ✅ Loading state
-  if (loading)
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-center">
-          <div className="h-6 w-6 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-          <p className="text-muted-foreground">Loading hospital details...</p>
-        </div>
-      </div>
-    );
-
-  // ✅ Error or missing hospital
-  if (error || !hospital)
-    return (
-      <div className="min-h-screen flex flex-col">
+      <>
         <Navbar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">
-              {error || "Hospital Not Found"}
-            </h1>
-            <Button onClick={() => navigate("/")}>Back to Hospitals</Button>
-          </div>
+        <div className="container mx-auto py-20 text-center">
+          Loading hospital details...
         </div>
         <Footer />
-      </div>
+      </>
     );
+  }
 
-  // ✅ Main Hospital Details
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8 bg-background">
-        <div className="max-w-6xl mx-auto">
+  if (error) {
+    return (
+      <>
+        <Navbar />
+        <div className="container mx-auto py-20 text-center">
+          <p className="text-red-500">{error}</p>
           <Button
-            variant="ghost"
+            className="mt-4"
             onClick={() => navigate("/")}
-            className="mb-6 flex items-center"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Hospitals
+            Go Back
           </Button>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
-          <div className="grid lg:grid-cols-2 gap-8 mb-8">
-            <div className="aspect-video overflow-hidden rounded-lg">
-              <img
-                src={hospital.image_url}
-                alt={hospital.name}
-                className="w-full h-full object-cover"
-              />
+  if (!hospital) {
+    return (
+      <>
+        <Navbar />
+        <div className="container mx-auto py-20 text-center">
+          Hospital not found
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Navbar />
+
+      <div className="container mx-auto px-4 py-8">
+        <Button
+          variant="outline"
+          onClick={() => navigate(-1)}
+          className="mb-6"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
+
+        <Card>
+          <img
+            src={hospital.image_url}
+            alt={hospital.name}
+            className="w-full h-80 object-cover"
+          />
+
+          <CardContent className="p-6">
+            <h1 className="text-3xl font-bold mb-4">
+              {hospital.name}
+            </h1>
+
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center gap-2">
+                <MapPin size={18} />
+                <span>
+                  {hospital.location}, {hospital.county}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Phone size={18} />
+                <span>{hospital.phone}</span>
+              </div>
+
+              {hospital.rating && (
+                <div className="flex items-center gap-2">
+                  <Star size={18} />
+                  <span>{hospital.rating}/5</span>
+                </div>
+              )}
             </div>
 
-            <div>
-              <div className="flex items-start justify-between mb-4">
-                <h1 className="text-3xl font-bold text-foreground">
-                  {hospital.name}
-                </h1>
-                {hospital.rating && (
-                  <div className="flex items-center gap-1 text-yellow-500">
-                    <Star className="w-5 h-5 fill-current" />
-                    <span className="text-lg font-medium">
-                      {hospital.rating}
-                    </span>
+            <p className="text-gray-600 mb-6">
+              {hospital.description}
+            </p>
+
+            {hospital.services &&
+              hospital.services.length > 0 && (
+                <>
+                  <h2 className="text-xl font-semibold mb-3">
+                    Services
+                  </h2>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-8">
+                    {hospital.services.map(
+                      (service, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2"
+                        >
+                          <CheckCircle
+                            size={16}
+                            className="text-green-500"
+                          />
+                          {service}
+                        </div>
+                      )
+                    )}
+                  </div>
+                </>
+              )}
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button size="lg">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  Book Appointment
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>
+                    Book Appointment
+                  </DialogTitle>
+                </DialogHeader>
+
+                {!isBooked ? (
+                  <>
+                    <div className="space-y-4">
+                      <div>
+                        <Label>Full Name</Label>
+                        <Input
+                          value={name}
+                          onChange={(e) =>
+                            setName(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Phone Number</Label>
+                        <Input
+                          value={phone}
+                          onChange={(e) =>
+                            setPhone(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Date</Label>
+                        <Input
+                          type="date"
+                          value={date}
+                          onChange={(e) =>
+                            setDate(e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Time</Label>
+                        <Input
+                          type="time"
+                          value={time}
+                          onChange={(e) =>
+                            setTime(e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <DialogFooter>
+                      <Button onClick={handleBooking}>
+                        <Clock className="mr-2 h-4 w-4" />
+                        Confirm Booking
+                      </Button>
+                    </DialogFooter>
+                  </>
+                ) : (
+                  <div className="text-center py-6">
+                    <CheckCircle
+                      size={48}
+                      className="mx-auto text-green-500 mb-3"
+                    />
+                    <p className="font-semibold">
+                      Appointment booked successfully!
+                    </p>
                   </div>
                 )}
-              </div>
+              </DialogContent>
+            </Dialog>
+          </CardContent>
+        </Card>
+      </div>
 
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3 text-muted-foreground">
-                  <MapPin className="w-5 h-5" /> {hospital.location},{" "}
-                  {hospital.county}
-                </div>
-                <div className="flex items-center gap-3 text-muted-foreground">
-                  <Phone className="w-5 h-5" /> {hospital.phone}
-                </div>
-                <div className="flex items-center gap-3 text-muted-foreground">
-                  <Clock className="w-5 h-5" /> 24/7 Emergency Services
-                </div>
-              </div>
-
-              {/* Booking Modal */}
-              <Dialog
-                onOpenChange={(open) => {
-                  if (!open) setIsBooked(false);
-                }}
-              >
-                <DialogTrigger asChild>
-                  <Button className="w-full mb-4 bg-primary hover:bg-primary/90">
-                    <Calendar className="w-4 h-4 mr-2" /> Book Appointment
-                  </Button>
-                </DialogTrigger>
-
-                <DialogContent>
-                  {!isBooked ? (
-                    <>
-                      <DialogHeader>
-                        <DialogTitle>
-                          Book Appointment at {hospital.name}
-                        </DialogTitle>
-                      </DialogHeader>
-                      <form
-                        onSubmit={handleBookingSubmit}
-                        className="space-y-4"
-                      >
-                        <div className="grid gap-2">
-                          <Label htmlFor="name">Full Name</Label>
-                          <Input
-                            id="name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="date">Date</Label>
-                          <Input
-                            id="date"
-                            type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            required
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="time">Time</Label>
-                          <Input
-                            id="time"
-                            type="time"
-                            value={time}
-                            onChange={(e) => setTime(e.target.value)}
-                            required
-                          />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="phone">Phone Number</Label>
-                          <Input
-                            id="phone"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            required
-                          />
-                        </div>
-                        <DialogFooter>
-                          <Button type="submit" className="w-full">
-                            Confirm Booking
-                          </Button>
-                        </DialogFooter>
-                      </form>
-                    </>
-                  ) : (
-                    <div className="flex flex-col items-center text-center space-y-4 py-8">
-                      <CheckCircle className="w-16 h-16 text-green-500" />
-                      <h2 className="text-2xl font-semibold">
-                        Appointment Confirmed!
-                      </h2>
-                      <p>
-                        Thank you, <strong>{name}</strong> — your appointment at{" "}
-                        <strong>{hospital.name}</strong> has been booked for{" "}
-                        <strong>{date}</strong> at <strong>{time}</strong>.
-                      </p>
-                      <Button onClick={() => navigate("/")} className="mt-4">
-                        Back to Home
-                      </Button>
-                    </div>
-                  )}
-                </DialogContent>
-              </Dialog>
-
-              <Button variant="outline" className="w-full" asChild>
-                <a href={`tel:${hospital.phone}`}>
-                  <Phone className="w-4 h-4 mr-2" /> Call Hospital
-                </a>
-              </Button>
-            </div>
-          </div>
-
-          <Card className="mb-8">
-            <CardContent className="p-6">
-              <h2 className="text-2xl font-bold mb-4">About This Hospital</h2>
-              <p className="text-muted-foreground mb-4">
-                {hospital.description}
-              </p>
-            </CardContent>
-          </Card>
-
-          {hospital.services?.length ? (
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-bold mb-4">Our Services</h2>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {hospital.services.map((service, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center gap-3 p-4 bg-primary/5 rounded-lg"
-                    >
-                      <div className="w-2 h-2 rounded-full bg-primary"></div>
-                      <span className="font-medium">{service}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ) : null}
-        </div>
-      </main>
       <Footer />
-    </div>
+    </>
   );
 };
 
 export default HospitalDetail;
-
-
-
