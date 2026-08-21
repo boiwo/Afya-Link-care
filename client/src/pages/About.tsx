@@ -125,7 +125,7 @@ const About = () => {
             {/* Nurses Specialist Image */}
             <div className="w-full">
               <img
-                src="https://media.licdn.com/dms/image/v2/D4D03AQHr5WpLdox42g/profile-displayphoto-scale_400_400/B4DaAe9ZMRGkAk-/0/1787225810302?e=1788998400&v=beta&t=eHxXasWZ8tuXnQbd42ucKmF4FNB2IJmGVOT1_PjjWGA"
+                src="https://media.licdn.com/dms/image/v2/D4D03AQH1Q12a77YT5A/profile-displayphoto-scale_400_400/B4DaAlccDVJ0Ag-/0/1787334610761?e=1788998400&v=beta&t=cbHkugf7grb4aE_mRhhIw5TBF2Qa56y5OTZaNO08DqI"
                 alt="Nurses Specialist"
                 className="w-full h-auto object-cover rounded-xl shadow-lg border border-border"
               />
