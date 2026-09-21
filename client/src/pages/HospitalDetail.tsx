@@ -232,9 +232,7 @@ const HospitalDetail = () => {
     );
   }
 
-  // -------------------------
-  // MAIN UI
-  // -------------------------
+ 
 
   return (
     <>
@@ -251,7 +249,7 @@ const HospitalDetail = () => {
         </Button>
 
         <Card className="overflow-hidden rounded-2xl border-gray-100 shadow-sm">
-          {/* Hero image */}
+         
           <div className="relative aspect-[16/7] w-full overflow-hidden bg-gray-100">
             <img
               src={hospital.image_url}
@@ -271,7 +269,7 @@ const HospitalDetail = () => {
 
           <CardContent className="p-6 md:p-8">
             <div className="grid gap-8 md:grid-cols-3">
-              {/* Left: main info */}
+              
               <div className="md:col-span-2">
                 <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
                   {hospital.name}
@@ -319,7 +317,7 @@ const HospitalDetail = () => {
                 )}
               </div>
 
-              {/* Right: booking panel */}
+            
               <div className="md:col-span-1">
                 <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
                   <p className="text-xs uppercase tracking-wide text-gray-400">
@@ -348,7 +346,7 @@ const HospitalDetail = () => {
                         </DialogTitle>
                       </DialogHeader>
 
-                      {/* STEP 1: APPOINTMENT FORM */}
+                      
                       {!paymentStep && !isBooked && (
                         <>
                           <div className="space-y-4">
@@ -421,11 +419,11 @@ const HospitalDetail = () => {
                         </>
                       )}
 
-                      {/* STEP 2: M-PESA PAYMENT */}
+                      
                       {paymentStep && !isBooked && (
                         <>
                           <div className="space-y-5">
-                            {/* PAYMENT DETAILS */}
+                            
                             <div className="rounded-lg border bg-green-50 p-5">
                               <h3 className="mb-4 text-lg font-bold">
                                 Pay with M-Pesa
@@ -475,7 +473,7 @@ const HospitalDetail = () => {
                               </div>
                             </div>
 
-                            {/* INSTRUCTIONS */}
+
                             <div className="rounded-lg bg-gray-100 p-4">
                               <h4 className="mb-3 font-semibold">
                                 Payment Instructions
@@ -537,7 +535,7 @@ const HospitalDetail = () => {
                         </>
                       )}
 
-                      {/* STEP 3: SUCCESS */}
+                      
                       {isBooked && (
                         <div className="py-8 text-center">
                           <CheckCircle
