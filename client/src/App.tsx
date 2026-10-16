@@ -12,7 +12,7 @@ import HospitalDetail from "./pages/HospitalDetail";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin"; 
 
-// SHA Routes
+
 import SHARegistration from "./pages/sha/SHARegistration";
 import SHADashboard from "./pages/sha/SHADashboard"; 
 
@@ -26,7 +26,7 @@ const App = () => (
       
       <HashRouter>
         <Routes>
-          {/* Public Routes */}
+          
           <Route path="/" element={<Index />} />
           <Route path="/clinics" element={<Clinics />} />
           <Route path="/articles" element={<Articles />} />
@@ -34,18 +34,17 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/hospital/:id" element={<HospitalDetail />} />
 
-          {/* Admin Route */}
+      
           <Route path="/admin" element={<Admin />} />
 
-          {/* SHA Routes */}
+          
           <Route path="/sha/register" element={<SHARegistration />} />
           <Route path="/sha/dashboard" element={<SHADashboard />} />
 
-          {/* Backward compatibility redirects (just in case) */}
+          
           <Route path="/dashboard" element={<Navigate to="/sha/dashboard" replace />} />
           <Route path="/account" element={<Navigate to="/sha/dashboard" replace />} />
 
-          {/* CATCH-ALL */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </HashRouter>
